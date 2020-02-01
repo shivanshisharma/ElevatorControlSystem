@@ -1,8 +1,5 @@
 import java.util.stream.IntStream;
 
-/**
- * 
- */
 
 /**
  * @author Fareed Ahmad 
@@ -22,6 +19,7 @@ public class ElevatorSubsystem implements Runnable{
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
 	private int index;
+	private Boolean dir;
 	
 	public ElevatorSubsystem(Scheduler s) {
 		this.s = s;
