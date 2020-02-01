@@ -21,7 +21,6 @@ public class Floor extends Subsystem implements Runnable {
 	
 	private Boolean upButton;
 	private Boolean downButton;
-	private int position;
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
 	
@@ -44,7 +43,7 @@ public class Floor extends Subsystem implements Runnable {
 	@Override
 	public void run() {
 		// read input
-		FloorData data = new FloorData("14:05:15.0", 2, true, 4);
+		FloorData data = new FloorData("14:05:15.0", 1, true, 4);
 		
 		sendingPacket = this.createPacket(data.toString().getBytes(), 1);
 
@@ -73,7 +72,4 @@ public class Floor extends Subsystem implements Runnable {
 		Thread floor1 = new Thread(new Floor());
 		floor1.start();
 	}
-	
-	
-
 }
