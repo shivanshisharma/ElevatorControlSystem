@@ -53,6 +53,14 @@ public class Floor extends Subsystem implements Runnable {
 
 		// Send the datagram packet to the Scheduler on port 1
 		this.sendPacket(sendReceiveSocket, sendingPacket, "Floor");
+		
+		
+		byte elevatorData[] = new byte[100];
+		receivingPacket = new DatagramPacket(elevatorData, elevatorData.length);
+		this.receivePacket(sendReceiveSocket, receivingPacket, "Floor");
+		
+		// Print out received packet
+		this.printPacket(receivingPacket);
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();

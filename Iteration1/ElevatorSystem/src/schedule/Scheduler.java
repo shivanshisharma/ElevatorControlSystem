@@ -84,7 +84,7 @@ public class Scheduler extends Subsystem implements Runnable {
 		this.printPacket(floorPacket);
 		
 		byte elevatorData[] = new byte[100];
-		elevatorPacket = new DatagramPacket(floorData, floorData.length);
+		elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
 		this.receivePacket(receiveSocket, elevatorPacket, "Scheduler");
 
 		// Print out received packet
@@ -95,8 +95,22 @@ public class Scheduler extends Subsystem implements Runnable {
 		// Print out info that is in the packet before sending
 		this.printPacket(instructionPacket);
 
-		// Send the datagram packet to the Scheduler on port 1
-		this.sendPacket(sendSocket, instructionPacket, "Schedular");
+		// Send the datagram packet to the Elevator
+		this.sendPacket(sendSocket, instructionPacket, "Scheduler");
+		
+		elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
+		this.receivePacket(receiveSocket, elevatorPacket, "Scheduler");
+
+		// Print out received packet
+		this.printPacket(elevatorPacket);
+		
+		floorPacket = this.createPacket(elevatorPacket.getData(), floorPacket.getPort());
+
+		// Print out info that is in the packet before sending
+		this.printPacket(floorPacket);
+
+		// Send the datagram packet to the Elevator
+		this.sendPacket(sendSocket, floorPacket, "Scheduler");
 		
 	}
 

@@ -68,6 +68,14 @@ public class Elevator extends Subsystem implements Runnable {
 
 		// Print the received datagram.
 		this.printPacket(instructionPacket);
+		
+		elevatorDataPacket = this.createPacket("Arrived at the floor".getBytes(), 1);
+
+		// Print out info that is in the packet before sending
+		this.printPacket(elevatorDataPacket);
+
+		// Send the datagram packet to the host on port 23
+		this.sendPacket(sendReceiveSocket, elevatorDataPacket, "Elevator");
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();
