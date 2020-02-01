@@ -18,7 +18,6 @@ import floor.common.Subsystem;
  *
  */
 public class Floor extends Subsystem implements Runnable {
-
 	
 	private Boolean upButton;
 	private Boolean downButton;

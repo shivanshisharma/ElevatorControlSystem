@@ -29,13 +29,20 @@ public class Scheduler extends Subsystem implements Runnable {
 	//If stopped
 	private Boolean stop;
 	
-	private DatagramPacket floorPacket, elevatorPacket;
-	private DatagramSocket receiveSocket, sendReceiveSocket;
+	private DatagramPacket floorPacket, elevatorPacket, instructionPacket;
+	private DatagramSocket receiveSocket, sendSocket;
 	
 	
 	public Scheduler() {
 		try {
 			receiveSocket = new DatagramSocket(1);
+		} catch (SocketException se) {
+			se.printStackTrace();
+			System.exit(1);
+		}
+		
+		try {
+			sendSocket = new DatagramSocket();
 		} catch (SocketException se) {
 			se.printStackTrace();
 			System.exit(1);
@@ -75,6 +82,22 @@ public class Scheduler extends Subsystem implements Runnable {
 
 		// Print out received packet
 		this.printPacket(floorPacket);
+		
+		byte elevatorData[] = new byte[100];
+		elevatorPacket = new DatagramPacket(floorData, floorData.length);
+		this.receivePacket(receiveSocket, elevatorPacket, "Scheduler");
+
+		// Print out received packet
+		this.printPacket(elevatorPacket);
+		
+		instructionPacket = this.createPacket("New Instruction".getBytes(), elevatorPacket.getPort());
+
+		// Print out info that is in the packet before sending
+		this.printPacket(instructionPacket);
+
+		// Send the datagram packet to the Scheduler on port 1
+		this.sendPacket(sendSocket, instructionPacket, "Schedular");
+		
 	}
 
 	/**
