@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
  *
  */
 public class Subsystem {
-	private void printPacket(DatagramPacket packet) {
+	protected void printPacket(DatagramPacket packet) {
 		System.out.println("From host: " + packet.getAddress());
 		System.out.println("Host port: " + packet.getPort());
 		int len = packet.getLength();
@@ -26,7 +26,7 @@ public class Subsystem {
 		System.out.println(received);
 	}
 
-	private DatagramPacket createPacket(byte[] message, int port) {
+	protected DatagramPacket createPacket(byte[] message, int port) {
 		DatagramPacket packet = null;
 		// Create a packet either read or write
 		try {
@@ -38,7 +38,7 @@ public class Subsystem {
 		return packet;
 	}
 	
-	private void receivePacket(DatagramSocket receivingSocket, DatagramPacket receivingPacket, String name) {
+	protected void receivePacket(DatagramSocket receivingSocket, DatagramPacket receivingPacket, String name) {
 		System.out.println(name + ": Waiting for Packet.\n");
 		try {
 			// Block until a datagram is received via socket.
@@ -51,7 +51,7 @@ public class Subsystem {
 		System.out.println(name + ": Packet received:");
 	}
 	
-	private void sendPacket(DatagramSocket sendingSocket, DatagramPacket packet,String name) {
+	protected void sendPacket(DatagramSocket sendingSocket, DatagramPacket packet,String name) {
 		System.out.println(name + ": Sending packet:");
 		try {
 			sendingSocket.send(packet);
