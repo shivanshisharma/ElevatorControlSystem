@@ -20,6 +20,12 @@ Installation:
 Test Case:
 Run the scheduler class. It will wait for a packet from the floor class. Run the floor class it will send a packt to the scheduler. Run the Elevetor class it will send a packet to the scheduler class and receive a repsonse. It will then send another packet to the scheduler which will forward it to the floor.
 
+Sequence Diagram:
+https://github.com/fareedxah/ElevatorSystem-SYSC3303/blob/master/Iteration1/ElevatorSystem/SequenceDiagram.png
+
+Class Diagram:
+
+
 Group Members:
 1)	Jaskaran Singh 
 2)	Fareed Ahmad
