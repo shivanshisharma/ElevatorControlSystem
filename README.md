@@ -21,7 +21,7 @@ Installation:
     c)Floor
 
 Test Case:
-Run the scheduler class. It will wait for a packet from the Floor class. Run the Floor class and it will send a packet to the Scheduler. Running the Elevetor class will send a packet to the Scheduler class and receive a repsonse. It will then send another packet to the Scheduler which will forward it to the Floor. This process is well defined using the Sequence Diagram.
+Run the scheduler class. It will wait for a packet from the Floor class. Run the Floor class and it will send a packet to the Scheduler. Running the Elevetor class will send a packet to the Scheduler class and receive a repsonse. It will then send another packet to the Scheduler which will forward it to the Floor. This process is well defined using the Sequence Diagram. To test reading from a file use the ReadFile.test class.
 
 Sequence Diagram:
 https://github.com/fareedxah/ElevatorSystem-SYSC3303/blob/master/Iteration1/ElevatorSystem/SequenceDiagram.png
