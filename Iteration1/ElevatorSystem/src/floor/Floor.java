@@ -43,7 +43,7 @@ public class Floor extends Subsystem implements Runnable {
 		}
 	}
 	
-	private void readFile() {
+	public void readFile() {
 		File file = new File("Data.txt");
         Scanner input;
 		try {
@@ -90,6 +90,11 @@ public class Floor extends Subsystem implements Runnable {
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();
+	}
+	
+	public List<FloorData> getData() {
+		return data;
+		
 	}
 	
 	/**

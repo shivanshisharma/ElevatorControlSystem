@@ -12,9 +12,6 @@ import org.junit.Test;
  */
 public class PacketTest {
 
-	@Test
-	public void readInputfileTest() {
-		fail("Not yet implemented");
-	}
+	
 
 }
