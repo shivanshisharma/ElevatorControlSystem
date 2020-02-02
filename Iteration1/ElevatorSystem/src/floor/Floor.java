@@ -39,7 +39,7 @@ public class Floor extends Subsystem implements Runnable {
 			System.exit(1);
 		}
 	}
-
+	
 	@Override
 	public void run() {
 		// read input
