@@ -24,7 +24,7 @@ Sequence Diagram:
 https://github.com/fareedxah/ElevatorSystem-SYSC3303/blob/master/Iteration1/ElevatorSystem/SequenceDiagram.png
 
 Class Diagram:
-
+https://github.com/fareedxah/ElevatorSystem-SYSC3303/blob/master/Iteration1/ElevatorSystem/UML%20Class%20Diagram.png
 
 Group Members:
 1)	Jaskaran Singh 
