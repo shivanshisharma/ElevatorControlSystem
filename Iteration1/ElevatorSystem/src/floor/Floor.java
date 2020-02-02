@@ -43,10 +43,8 @@ public class Floor extends Subsystem implements Runnable {
 		}
 	}
 	
-	@Override
-	public void run() {
-		// Input file 
-        File file = new File("Data.txt");
+	private void readFile() {
+		File file = new File("Data.txt");
         Scanner input;
 		try {
 			input = new Scanner(file);
@@ -65,7 +63,13 @@ public class Floor extends Subsystem implements Runnable {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
+	}
+	
+	@Override
+	public void run() {
+		// Input file 
+		readFile();
 		
 		// read input
 		sendingPacket = this.createPacket(data.get(0).toString().getBytes(), 1);
