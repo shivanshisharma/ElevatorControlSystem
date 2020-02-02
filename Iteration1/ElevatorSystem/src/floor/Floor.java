@@ -1,12 +1,9 @@
 package floor;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,7 +23,6 @@ public class Floor extends Subsystem implements Runnable {
 	
 	private Boolean upButton;
 	private Boolean downButton;
-	private int position;
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
 	private List<FloorData> data = new ArrayList<FloorData>(); 
@@ -99,7 +95,4 @@ public class Floor extends Subsystem implements Runnable {
 		Thread floor1 = new Thread(new Floor());
 		floor1.start();
 	}
-	
-	
-
 }
