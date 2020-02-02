@@ -15,7 +15,10 @@ Subsystem.java contains all methods that are used for the system to send, create
 Installation: 
 1)	Clone the project from provided GitHub link.
 2)	Import the project in Eclipse IDE.
-3)	Run the Floor, Elevator and Scheduler classes individually. 
+3)	Run in order classes individually
+    a)Elevator
+    b)Scheduler
+    c)Floor
 
 Test Case:
 Run the scheduler class. It will wait for a packet from the Floor class. Run the Floor class and it will send a packet to the Scheduler. Running the Elevetor class will send a packet to the Scheduler class and receive a repsonse. It will then send another packet to the Scheduler which will forward it to the Floor. This process is well defined using the Sequence Diagram.
