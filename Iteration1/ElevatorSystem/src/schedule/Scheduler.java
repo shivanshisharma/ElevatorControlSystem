@@ -38,14 +38,14 @@ public class Scheduler extends Subsystem implements Runnable {
 		elevator2Request = new ArrayList<>();
 		
 		//This will change depending on the amount of elevators in the subsystem running
-		position = new int[1];
+		position = new int[2];
 		position[0] = 1;
 		position[1] = 1;
 		
-		direction = new int[1];
+		direction = new int[2];
 		/*
-		 * 0 : means that its going down
-		 * 1 : means that its going up
+		 * 0 : means that its going up
+		 * 1 : means that its going down
 		 * 2 : means that its stopped
 		 */
 		direction[0] = 2;
@@ -65,41 +65,7 @@ public class Scheduler extends Subsystem implements Runnable {
 			System.exit(1);
 		}
 	}
-	
-	/*
-	 * OLD
-	 
-	public void sendElevator(int port, ArrayList<Integer> dropoff )
-	{
-		//Send to Elevator
-		byte[] floor = decideDestination(direction[port-1], port, dropoff);
-		
-		
-		try {																			//elevator id to send to 
-			floorPacket = new DatagramPacket(floor, floor.length, InetAddress.getLocalHost(), port);
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
 
-		System.out.println("Scheduler: Sending packet to elevator " + port);
-		System.out.println("To host:   " + sendPacket.getAddress());
-		System.out.println("Destination host port:   " + sendPacket.getPort());
-		int len = sendPacket.getLength();
-		System.out.println("Length: " + len);
-		System.out.println("Containing: ");
-		String msgSendElevatorStr = new String(sendPacket.getData(),0,len);
-		System.out.println("Packet data in bytes: " + Arrays.toString(msgSendElevatorStr.getBytes()));
-		System.out.println("Packet data as a string: " + msgSendElevatorStr);
-
-		try {
-			sendSocket.send(sendPacket);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		System.out.println("Scheduler: Packet sent\n");
-	}
-	*/
 	public byte[] decideDestination(int direc, int port, ArrayList<Integer> request){
 
 		int destinationFloor = 8;
@@ -173,40 +139,6 @@ public class Scheduler extends Subsystem implements Runnable {
 		
 		return ret;
 	} 
-
-	
-	/*
-	public void receiveFloor() {
-		byte[] data = new byte[1];
-		receivePacket = new DatagramPacket(data, data.length);
-		
-		System.out.println("Scheduler: Waiting for Packet.\n");
-		//Block until a datagram packet is received.
-		try {
-			System.out.println("Waiting for floor... 1 second timeout");
-			//sendReceiveSocket.setSoTimeout(1000);
-			sendReceiveSocket.receive(receivePacket);
-		} catch (IOException e) {
-			//e.printStackTrace();
-			//System.exit(1);
-			return;
-		}
-		
-		//Process received datagram
-		System.out.println("Scheduler: Packet received from floor");
-		System.out.println("From host:   " + receivePacket.getAddress());
-		System.out.println("Host port:   " + receivePacket.getPort());
-		int len = receivePacket.getLength();
-		System.out.println("Length: " + len);
-		System.out.println("Containing: ");
-		String msgReceiveElevatorStr = new String(receivePacket.getData(),0,len);
-		System.out.println("Packet data in bytes: " + Arrays.toString(msgReceiveElevatorStr.getBytes()));
-		System.out.println("Packet data as a string: " + msgReceiveElevatorStr + "\n");
-		
-		//When the Scheduler receives a message from the floor, we need to put in an elevator list
-		populateElevatorLists((int)data[0]);
-	}*/
-	
 	
 	public void populateElevatorLists(int floor)
 	{
@@ -307,12 +239,17 @@ public class Scheduler extends Subsystem implements Runnable {
 		return false; //Shouldn't get here but will be able to service the floor and reset its direction if not moving
 	}
 
-
+	public byte[] sendElevator(int port, ArrayList<Integer> request) {
+		 byte[] floor = decideDestination(direction[port-1], port, request);
+		 return floor;
+	}
+	
 	@Override
 	public void run() {
 		byte floorData[] = new byte[100];
 		floorPacket = new DatagramPacket(floorData, floorData.length);
 		this.receivePacket(receiveSocket, floorPacket, "Scheduler");
+		populateElevatorLists((int)floorData[2]);
 
 		// Print out received packet
 		this.printPacket(floorPacket);
@@ -321,17 +258,26 @@ public class Scheduler extends Subsystem implements Runnable {
 		elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
 		this.receivePacket(receiveSocket, elevatorPacket, "Scheduler");
 		
-		populateElevatorLists((int)floorData[2]);
-
 		// Print out received packet
 		this.printPacket(elevatorPacket);
+		/*int port = data[2];
+		positions[port-1] = data[0];
+		directions[port-1] = data[1];*/
 		
-		instructionPacket = this.createPacket("New Instruction".getBytes(), elevatorPacket.getPort());
+		// Send the datagram packet to the Elevator
+		byte[] floor = "New Instruction".getBytes();
+		if(!elevator1Request.isEmpty()) {
+			floor = sendElevator(1, elevator1Request);
+		}
+		if(!elevator2Request.isEmpty()) {
+			floor = sendElevator(1, elevator1Request);
+		}
+		
+		instructionPacket = this.createPacket(floor, elevatorPacket.getPort());
 
 		// Print out info that is in the packet before sending
 		this.printPacket(instructionPacket);
-
-		// Send the datagram packet to the Elevator
+		
 		this.sendPacket(sendSocket, instructionPacket, "Scheduler");
 		
 		elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
