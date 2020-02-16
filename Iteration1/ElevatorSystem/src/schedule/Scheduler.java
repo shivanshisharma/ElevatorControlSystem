@@ -1,13 +1,7 @@
-
 package schedule;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
-/**
- * 
- */
-
 import schedule.common.Subsystem;
 
 /**
@@ -260,9 +254,10 @@ public class Scheduler extends Subsystem implements Runnable {
 		
 		// Print out received packet
 		this.printPacket(elevatorPacket);
-		/*int port = data[2];
-		positions[port-1] = data[0];
-		directions[port-1] = data[1];*/
+		/*int port = elevatorData[2];
+		positions[port-1] = elevatorData[0];
+		directions[port-1] = elevatorData[1];
+		*/
 		
 		// Send the datagram packet to the Elevator
 		byte[] floor = "New Instruction".getBytes();
@@ -293,7 +288,6 @@ public class Scheduler extends Subsystem implements Runnable {
 
 		// Send the datagram packet to the Elevator
 		this.sendPacket(sendSocket, floorPacket, "Scheduler");
-		
 	}
 
 	/**
