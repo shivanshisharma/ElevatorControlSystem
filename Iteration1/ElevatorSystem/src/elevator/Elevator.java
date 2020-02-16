@@ -26,20 +26,21 @@ public class Elevator extends Subsystem implements Runnable {
 	int id;
 	private int floor; // Elevator's Current Floor
 
-	private boolean operational;
+	
+	private boolean isWaiting;
+	private int targetFloor;
 	private boolean door;
 	private int motor;
+	private boolean operational;
 	private boolean[] buttons;
 	private int index;
 	private boolean goingUp;
-	private boolean isWaiting;
-	private int targetFloor;
+	
 
 	private DatagramPacket elevatorDataPacket, instructionPacket;
 	private DatagramSocket sendReceiveSocket;
 	
-	ElevatorSystem state;
-	Door doorState; 
+	
 	ElevatorButton button1, button2, button3, button4, button5;
 	elevatorLight light1, light2, light3, light4, light5; 
 
@@ -48,6 +49,8 @@ public class Elevator extends Subsystem implements Runnable {
 	elevatorLight[] lightArray;
 	private String direction;
 	private int[] floors;
+	ElevatorSystem state;
+	Door doorState; 
 
 	public Elevator() {
 		operational = true;
