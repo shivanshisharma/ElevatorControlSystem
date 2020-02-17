@@ -1,6 +1,6 @@
 package elevator;
 
-public class elevatorLight {
+public class ElevatorLight {
 	private boolean isOn;
 
 	void light() {

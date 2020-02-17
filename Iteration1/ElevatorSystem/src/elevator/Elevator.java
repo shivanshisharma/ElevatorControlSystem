@@ -19,9 +19,6 @@ public class Elevator extends Subsystem implements Runnable {
 	 */
 	
 	//things to keep track of the state machine
-	
-	
-	
 	private int currFloor;
 	int id;
 	private int floor; // Elevator's Current Floor
@@ -42,17 +39,26 @@ public class Elevator extends Subsystem implements Runnable {
 	
 	
 	ElevatorButton button1, button2, button3, button4, button5;
-	elevatorLight light1, light2, light3, light4, light5; 
+	ElevatorLight light1, light2, light3, light4, light5; 
 
 	Motor motorState;
 	ElevatorButton [] buttonArray;
-	elevatorLight[] lightArray;
+	ElevatorLight[] lightArray;
 	private String direction;
 	private int[] floors;
 	ElevatorSystem state;
 	Door doorState; 
 
 	public Elevator() {
+		
+		try {
+			// Construct a datagram socket to send and receive
+			sendReceiveSocket = new DatagramSocket();
+		} catch (SocketException se) { // Can't create the socket.
+			se.printStackTrace();
+			System.exit(1);
+		}
+		
 		operational = true;
 		this.floors = IntStream.range(1, 10).toArray();
 		this.index = 0;
@@ -68,7 +74,7 @@ public class Elevator extends Subsystem implements Runnable {
 		buttonArray[3] = button4;
 		buttonArray[4] = button5;
 		
-		lightArray = new elevatorLight[5];
+		lightArray = new ElevatorLight[5];
 		lightArray[0] = light1;
 		lightArray[1] = light2;
 		lightArray[2] = light3;
