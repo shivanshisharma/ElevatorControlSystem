@@ -1,10 +1,12 @@
 package floor;
-import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
 import floor.common.FloorData;
@@ -23,6 +25,7 @@ public class Floor extends Subsystem implements Runnable {
 	private Boolean downButton;
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
+	private List<FloorData> data = new ArrayList<FloorData>(); 
 	
 	private DatagramPacket sendingPacket, receivingPacket;
 	private DatagramSocket sendReceiveSocket;
@@ -40,12 +43,36 @@ public class Floor extends Subsystem implements Runnable {
 		}
 	}
 	
+	public void readFile() {
+		File file = new File("Data.txt");
+        Scanner input;
+		try {
+			input = new Scanner(file);
+			while (input.hasNextLine()) {
+	            String line = input.nextLine();
+	            
+	            FloorData floorData = new FloorData(line.split(" ")[0], 
+	            		Integer.parseInt(line.split(" ")[1]), 
+	            		line.split(" ")[2].equalsIgnoreCase("Up") , 
+	            		Integer.parseInt(line.split(" ")[3]));
+	            data.add(floorData);
+	            
+	            System.out.println(line);
+	        }
+	        input.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
 	@Override
 	public void run() {
-		// read input
-		FloorData data = new FloorData("14:05:15.0", 1, true, 4);
+		// Input file 
+		readFile();
 		
-		sendingPacket = this.createPacket(data.toString().getBytes(), 1);
+		// read input
+		sendingPacket = this.createPacket(data.get(0).toString().getBytes(), 1);
 
 		// Print out info that is in the packet before sending
 		this.printPacket(sendingPacket);
@@ -63,6 +90,11 @@ public class Floor extends Subsystem implements Runnable {
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();
+	}
+	
+	public List<FloorData> getData() {
+		return data;
+		
 	}
 	
 	/**

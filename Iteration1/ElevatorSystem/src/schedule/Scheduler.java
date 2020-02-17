@@ -90,7 +90,7 @@ public class Scheduler extends Subsystem implements Runnable {
 		// Print out received packet
 		this.printPacket(elevatorPacket);
 		
-		instructionPacket = this.createPacket("New Instruction".getBytes(), elevatorPacket.getPort());
+		instructionPacket = this.createPacket(floorPacket.getData(), elevatorPacket.getPort());
 
 		// Print out info that is in the packet before sending
 		this.printPacket(instructionPacket);
