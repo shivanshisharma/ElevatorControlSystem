@@ -1,7 +1,7 @@
 /**
  * 
  */
-package floor.common;
+package floor;
 
 /**
  * @author fareedahmad

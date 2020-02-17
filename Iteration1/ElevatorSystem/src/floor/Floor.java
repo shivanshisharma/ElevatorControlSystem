@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
-import floor.common.FloorData;
 import floor.common.Subsystem;
 
 /**
@@ -21,17 +20,22 @@ import floor.common.Subsystem;
  */
 public class Floor extends Subsystem implements Runnable {
 	
-	private Boolean upButton;
-	private Boolean downButton;
+	
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
-	private List<FloorData> data = new ArrayList<FloorData>(); 
+	
+	private FloorButton upButton, downButton;
+	private FloorLamp upLamp, downLamp;
+	private List<FloorData> data = new ArrayList<FloorData>();
 	
 	private DatagramPacket sendingPacket, receivingPacket;
 	private DatagramSocket sendReceiveSocket;
 	
 	public Floor() {
-		
+		upButton = new FloorButton(Constants.UP);
+		upButton = new FloorButton(Constants.DOWN);
+		upLamp = new FloorLamp(Constants.UP);
+		downLamp = new FloorLamp(Constants.DOWN);
 		floors = IntStream.range(1,10).toArray();
 		
 		try {
@@ -94,7 +98,6 @@ public class Floor extends Subsystem implements Runnable {
 	
 	public List<FloorData> getData() {
 		return data;
-		
 	}
 	
 	/**

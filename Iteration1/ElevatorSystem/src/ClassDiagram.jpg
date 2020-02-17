@@ -118,8 +118,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="floor.common.FloorData" project="ElevatorSystem" 
-    file="/ElevatorSystem/src/floor/common/FloorData.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="14" language="java" name="floor.FloorData" project="ElevatorSystem" 
+    file="/ElevatorSystem/src/floor/FloorData.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-422" y="917"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

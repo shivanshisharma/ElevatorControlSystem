@@ -24,6 +24,8 @@ public class Scheduler extends Subsystem implements Runnable {
 	private ArrayList<Integer> schedulerElevator = new ArrayList<>();
 	private int index;
 	
+	
+	
 	//If false, it heads down, if true, it heads up.
 	private Boolean DirEl;
 	//If stopped
