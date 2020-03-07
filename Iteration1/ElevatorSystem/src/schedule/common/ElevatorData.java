@@ -4,16 +4,16 @@ public class ElevatorData {
 	private int id;
 	private int currFloor;
 	private int state;
-	
-	
-	
+
+
+
 	public ElevatorData(int id, int currFloor, int state) {
 		super();
 		this.id = id;
 		this.currFloor = currFloor;
 		this.state = state;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -32,6 +32,6 @@ public class ElevatorData {
 	public void setState(int state) {
 		this.state = state;
 	}
-	
-	
+
+
 }

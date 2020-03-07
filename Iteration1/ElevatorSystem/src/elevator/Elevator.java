@@ -18,7 +18,7 @@ public class Elevator extends Subsystem implements Runnable {
 	/**
 	 * @param args
 	 */
-	
+
 	//things to keep track of the state machine
 	private int currFloor;
 	int id;
@@ -27,8 +27,7 @@ public class Elevator extends Subsystem implements Runnable {
 
 	private DatagramPacket elevatorDataPacket, instructionPacket;
 	private DatagramSocket sendReceiveSocket;
-	
-	
+
 	private ElevatorButton button1, button2, button3, button4, button5;
 	private ElevatorLight light1, light2, light3, light4, light5; 
 
@@ -40,7 +39,7 @@ public class Elevator extends Subsystem implements Runnable {
 	private Door door; 
 
 	public Elevator(int id) {
-		
+
 		try {
 			// Construct a datagram socket to send and receive
 			sendReceiveSocket = new DatagramSocket();
@@ -48,26 +47,26 @@ public class Elevator extends Subsystem implements Runnable {
 			se.printStackTrace();
 			System.exit(1);
 		}
-		
+
 		this.id =id;
 		this.operational = true;
 		this.currFloor = 0;
 		this.targetFloor = 0;
-		
+
 		buttonArray = new ElevatorButton[7];
 		buttonArray[0] = button1;
 		buttonArray[1] = button2;
 		buttonArray[2] = button3;
 		buttonArray[3] = button4;
 		buttonArray[4] = button5;
-		
+
 		lightArray = new ElevatorLight[5];
 		lightArray[0] = light1;
 		lightArray[1] = light2;
 		lightArray[2] = light3;
 		lightArray[3] = light4;
 		lightArray[4] = light5;
-		
+
 		motor = new Motor();
 		state = new ElevatorSystem();
 	}
@@ -90,10 +89,10 @@ public class Elevator extends Subsystem implements Runnable {
 
 		// Print the received datagram.
 		//this.printPacket(instructionPacket);
-		
-//		elevatorDataPacket = this.createPacket("Arrived at the floor".getBytes(), 1);
 
-//		// Print out info that is in the packet before sending
+		//		elevatorDataPacket = this.createPacket("Arrived at the floor".getBytes(), 1);
+
+		//		// Print out info that is in the packet before sending
 		this.printPacket(elevatorDataPacket);
 
 		// Send the datagram packet to the host on port 23
@@ -122,8 +121,8 @@ public class Elevator extends Subsystem implements Runnable {
 		setMotor(1);
 		openDoor();
 		closeDoor();
-		
-		
+
+
 		if(task == 0) {
 			setMotor();
 			buttonArray[2].setButtonState(true);
@@ -137,8 +136,8 @@ public class Elevator extends Subsystem implements Runnable {
 			lightArray[2].setLight(false);
 			setMotor(2);
 		}
-		*/
-		
+		 */
+
 	}
 	private void closeDoor() {
 		door.setDoorState(DoorState.Closed);
@@ -151,7 +150,7 @@ public class Elevator extends Subsystem implements Runnable {
 	public String toString() {
 		return this.motor.getMotorState() + " " + this.currFloor + " "  + this.targetFloor;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -178,9 +177,9 @@ public class Elevator extends Subsystem implements Runnable {
 		}else if(direction.equals(MotorState.Stopped)){
 			state.requestWait();
 		}
-		
+
 	}
-	
+
 	public void increaseFloor(int destination) {
 		this.currFloor = destination;
 		System.out.println("Elevator "+getId()+": -> floor "+this.currFloor);
@@ -190,11 +189,11 @@ public class Elevator extends Subsystem implements Runnable {
 		this.currFloor = destination;
 		System.out.println("Elevator "+getId()+": -> floor "+this.currFloor);
 	}
-	
+
 	public static void main(String[] args) {
 		Thread elevator1 = new Thread(new Elevator(1));
 		elevator1.start();
-		
+
 	}
-	
+
 }

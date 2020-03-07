@@ -23,26 +23,26 @@ public class Motor {
 				return 0;
 			}
 		};
-		
+
 		public abstract byte getByteValue();
 	}
-	
+
 	private MotorState state;
-	
+
 	public Motor() {
 		this.state = MotorState.Stopped;
 	}
-	
+
 	public void setMotorState (MotorState state) {
-		
+
 		this.state = state;
 	}
-	
-	
+
+
 	public MotorState getMotorState() {
-		
+
 		return state;
-		
+
 	}	
-	
+
 }

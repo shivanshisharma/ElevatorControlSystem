@@ -13,17 +13,17 @@ public class ElevatorButton {
 		floorNumber = b;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public void setButtonState(boolean state) {
-		
+
 		isSelected = state;
-	
+
 	}
 	public boolean getButtonState() {
-		
+
 		return isSelected;
 	}
-	
+
 	public byte getFloorNumber() {
 		return floorNumber;
 	}

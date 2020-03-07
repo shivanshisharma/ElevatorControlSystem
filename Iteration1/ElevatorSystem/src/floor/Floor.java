@@ -19,31 +19,31 @@ import floor.common.Subsystem;
  *
  */
 public class Floor extends Subsystem implements Runnable {
-	
-	
+
+
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
-	
+
 	private FloorButton upFloorButton, downFloorButton;
 	private FloorLamp upLamp, downLamp;
 	private DirectionLamp upDirectionLamp, downDirectionLamp;
 	private List<FloorData> data = new ArrayList<FloorData>();
-	
+
 	private DatagramPacket sendingPacket, receivingPacket;
 	private DatagramSocket sendReceiveSocket;
-	
+
 	public Floor() {
 		upFloorButton = new FloorButton(Constants.UP);
 		downFloorButton = new FloorButton(Constants.DOWN);
-		
+
 		upLamp = new FloorLamp(Constants.UP);
 		downLamp = new FloorLamp(Constants.DOWN);
-		
+
 		upDirectionLamp = new DirectionLamp(Constants.UP);
 		downDirectionLamp = new DirectionLamp(Constants.DOWN);
-		
+
 		floors = IntStream.range(1,10).toArray();
-		
+
 		try {
 			// Construct a datagram socket to send and receive
 			sendReceiveSocket = new DatagramSocket();
@@ -52,35 +52,35 @@ public class Floor extends Subsystem implements Runnable {
 			System.exit(1);
 		}
 	}
-	
+
 	public void readFile() {
 		File file = new File("Data.txt");
-        Scanner input;
+		Scanner input;
 		try {
 			input = new Scanner(file);
 			while (input.hasNextLine()) {
-	            String line = input.nextLine();
-	            
-	            FloorData floorData = new FloorData(line.split(" ")[0], 
-	            		Integer.parseInt(line.split(" ")[1]), 
-	            		line.split(" ")[2].equalsIgnoreCase("Up") , 
-	            		Integer.parseInt(line.split(" ")[3]));
-	            data.add(floorData);
-	            
-	            System.out.println(line);
-	        }
-	        input.close();
+				String line = input.nextLine();
+
+				FloorData floorData = new FloorData(line.split(" ")[0], 
+						Integer.parseInt(line.split(" ")[1]), 
+						line.split(" ")[2].equalsIgnoreCase("Up") , 
+						Integer.parseInt(line.split(" ")[3]));
+				data.add(floorData);
+
+				System.out.println(line);
+			}
+			input.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
-	
+
 	@Override
 	public void run() {
 		// Input file 
 		readFile();
-		
+
 		// read input
 		sendingPacket = this.createPacket(data.get(0).toString().getBytes(), 1);
 
@@ -89,23 +89,23 @@ public class Floor extends Subsystem implements Runnable {
 
 		// Send the datagram packet to the Scheduler on port 1
 		this.sendPacket(sendReceiveSocket, sendingPacket, "Floor");
-		
-		
+
+
 		byte elevatorData[] = new byte[100];
 		receivingPacket = new DatagramPacket(elevatorData, elevatorData.length);
 		this.receivePacket(sendReceiveSocket, receivingPacket, "Floor");
-		
+
 		// Print out received packet
 		this.printPacket(receivingPacket);
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();
 	}
-	
+
 	public List<FloorData> getData() {
 		return data;
 	}
-	
+
 	/**
 	 * @param args
 	 */

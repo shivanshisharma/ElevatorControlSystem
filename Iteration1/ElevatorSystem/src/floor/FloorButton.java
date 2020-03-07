@@ -8,7 +8,7 @@ public class FloorButton {
 		this.direction = direction;
 		this.active = false;
 	}
-	
+
 	public int getDirection() {
 		return direction;
 	}
@@ -16,7 +16,7 @@ public class FloorButton {
 	public  boolean isActive() {
 		return active;
 	}
-	
+
 	public void activate() {
 		active = true;
 	}

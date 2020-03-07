@@ -37,7 +37,7 @@ public class Subsystem {
 		}
 		return packet;
 	}
-	
+
 	protected void receivePacket(DatagramSocket receivingSocket, DatagramPacket receivingPacket,String name) {
 		System.out.println(name + ": Waiting for Packet.\n");
 		try {
@@ -50,7 +50,7 @@ public class Subsystem {
 		}
 		System.out.println(name + ": Packet received:");
 	}
-	
+
 	protected void sendPacket(DatagramSocket sendingSocket, DatagramPacket packet,String name) {
 		System.out.println(name + ": Sending packet:");
 		try {

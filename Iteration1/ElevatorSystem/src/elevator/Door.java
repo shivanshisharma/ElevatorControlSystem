@@ -20,11 +20,11 @@ public class Door {
 				return 0;
 			}
 		};
-		
+
 		public abstract byte getByteValue();
 	}
 	private DoorState state;
-	
+
 	public Door() {
 		state = DoorState.Closed;
 	}
@@ -32,9 +32,9 @@ public class Door {
 	public void setDoorState(DoorState state) {
 		this.state = state;
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public DoorState getDoorState() {
 		return state;
 	}
