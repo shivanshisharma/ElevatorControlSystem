@@ -1,10 +1,10 @@
 package floor;
 
-public class FloorButton {
+public class DirectionLamp {
 	private int direction;
 	private boolean active;
 
-	public FloorButton(int direction) {
+	public DirectionLamp(int direction) {
 		this.direction = direction;
 		this.active = false;
 	}
@@ -12,7 +12,7 @@ public class FloorButton {
 	public int getDirection() {
 		return direction;
 	}
-
+	
 	public  boolean isActive() {
 		return active;
 	}
@@ -20,4 +20,5 @@ public class FloorButton {
 	public void activate() {
 		active = true;
 	}
+	
 }

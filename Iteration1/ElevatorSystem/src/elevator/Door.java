@@ -1,26 +1,42 @@
 package elevator;
 
+
+
+
 /*
  * Door Class
  * isOpen = True Means the door is open 
  * isOpen = Flase Means the door is close
  * */
 public class Door {
-	private boolean isOpen;
+	public enum DoorState {
+		Open{
+			public byte getByteValue() {
+				return 1;
+			}
+		},
+		Closed{
+			public byte getByteValue() {
+				return 0;
+			}
+		};
+		
+		public abstract byte getByteValue();
+	}
+	private DoorState state;
 	
 	public Door() {
-		isOpen = false;
+		state = DoorState.Closed;
 	}
 
-	public void setDoorState(boolean state) {
-		isOpen = state;
+	public void setDoorState(DoorState state) {
+		this.state = state;
 		// TODO Auto-generated method stub
 		
 	}
 	
-	public boolean getDoorState() {
-		return isOpen;
-		
+	public DoorState getDoorState() {
+		return state;
 	}
 
 }

@@ -24,18 +24,24 @@ public class Floor extends Subsystem implements Runnable {
 	private int[] floors = new int[SIZE];
 	private static final int SIZE = 10;
 	
-	private FloorButton upButton, downButton;
+	private FloorButton upFloorButton, downFloorButton;
 	private FloorLamp upLamp, downLamp;
+	private DirectionLamp upDirectionLamp, downDirectionLamp;
 	private List<FloorData> data = new ArrayList<FloorData>();
 	
 	private DatagramPacket sendingPacket, receivingPacket;
 	private DatagramSocket sendReceiveSocket;
 	
 	public Floor() {
-		upButton = new FloorButton(Constants.UP);
-		upButton = new FloorButton(Constants.DOWN);
+		upFloorButton = new FloorButton(Constants.UP);
+		downFloorButton = new FloorButton(Constants.DOWN);
+		
 		upLamp = new FloorLamp(Constants.UP);
 		downLamp = new FloorLamp(Constants.DOWN);
+		
+		upDirectionLamp = new DirectionLamp(Constants.UP);
+		downDirectionLamp = new DirectionLamp(Constants.DOWN);
+		
 		floors = IntStream.range(1,10).toArray();
 		
 		try {

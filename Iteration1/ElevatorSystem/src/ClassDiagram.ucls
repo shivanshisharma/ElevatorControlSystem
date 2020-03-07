@@ -181,7 +181,7 @@
   </association>  
   <association id="28">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="29" name="doorState">        
+      <attribute id="29" name="door">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="30" minimum="0" maximum="1">        
@@ -229,7 +229,7 @@
   </association>  
   <association id="40">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="41" name="motorState">        
+      <attribute id="41" name="motor">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="42" minimum="0" maximum="1">        
@@ -279,64 +279,52 @@
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="53">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="54" name="data">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="55" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="56">    
+  <generalization id="53">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="9"/>  
   </generalization>  
-  <association id="57">    
+  <association id="54">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="58" name="state">        
+      <attribute id="55" name="state">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="59" minimum="0" maximum="1">        
+      <multiplicity id="56" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="60">    
+  <association id="57">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="61" name="button4">        
+      <attribute id="58" name="button4">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="62" minimum="0" maximum="1">        
+      <multiplicity id="59" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="63">    
+  <association id="60">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="64" name="light5">        
+      <attribute id="61" name="light5">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="65" minimum="0" maximum="1">        
+      <multiplicity id="62" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="66">    
+  <association id="63">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="67" name="light3">        
+      <attribute id="64" name="light3">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="68" minimum="0" maximum="1">        
+      <multiplicity id="65" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    

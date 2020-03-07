@@ -8,7 +8,10 @@ import java.util.Collections;
 /**
  * 
  */
+import java.util.List;
 
+import schedule.common.ElevatorData;
+import schedule.common.FloorData;
 import schedule.common.Subsystem;
 
 /**
@@ -22,18 +25,11 @@ import schedule.common.Subsystem;
 public class Scheduler extends Subsystem implements Runnable {
 
 	private ArrayList<Integer> schedulerElevator = new ArrayList<>();
-	private int index;
-	
-	
-	
-	//If false, it heads down, if true, it heads up.
-	private Boolean DirEl;
-	//If stopped
-	private Boolean stop;
+	private List<FloorData> floorRequests = new ArrayList<>();
+	private List<ElevatorData> elevatorRequests =  new ArrayList<>();
 	
 	private DatagramPacket floorPacket, elevatorPacket, instructionPacket;
 	private DatagramSocket receiveSocket, sendSocket;
-	
 	
 	public Scheduler() {
 		try {
@@ -51,16 +47,9 @@ public class Scheduler extends Subsystem implements Runnable {
 		}
 	}
 	
-	/*
-	 * This function adds a 
-	 */
-	public void addElevatorRequest(Integer item) {
-		if(schedulerElevator.contains(item)){
-			 System.out.println("Request already received");
-			 return;
-		}
-		
-		schedulerElevator.add(item);
+	public synchronized void addElevatorRequest(ElevatorData item) {
+		elevatorRequests.add(item);
+		notifyAll();
 	}
 	
 	public boolean checkRequests(Integer item) {
