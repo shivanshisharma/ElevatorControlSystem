@@ -82,7 +82,7 @@ public class Floor extends Subsystem implements Runnable {
 		readFile();
 
 		// read input
-		sendingPacket = this.createPacket(data.get(0).toString().getBytes(), 1);
+		sendingPacket = this.createPacket(data.get(0).toBytes(), 1);
 
 		// Print out info that is in the packet before sending
 		this.printPacket(sendingPacket);

@@ -10,12 +10,12 @@ package elevator;
  * */
 public class Door {
 	public enum DoorState {
-		Open{
+		OPEN{
 			public byte getByteValue() {
 				return 1;
 			}
 		},
-		Closed{
+		CLOSED{
 			public byte getByteValue() {
 				return 0;
 			}
@@ -26,12 +26,11 @@ public class Door {
 	private DoorState state;
 
 	public Door() {
-		state = DoorState.Closed;
+		state = DoorState.CLOSED;
 	}
 
 	public void setDoorState(DoorState state) {
 		this.state = state;
-		// TODO Auto-generated method stub
 
 	}
 

@@ -3,10 +3,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import schedule.common.Elevator;
+import schedule.common.ElevatorMessage;
 import schedule.common.Floor;
+import schedule.common.SchedulerInstruction;
+import schedule.common.SchedulerInstruction.INSTRUCTION;
 import schedule.common.Subsystem;
 
 /**
@@ -20,8 +24,9 @@ import schedule.common.Subsystem;
 public class Scheduler extends Subsystem implements Runnable {
 
 	private ArrayList<Integer> schedulerElevator = new ArrayList<>();
-	private List<Floor> floorRequests;
-	private List<Elevator> elevatorStatus;
+	private List<Floor> floorRequestQueue;
+	private List<ElevatorMessage> elevatorMessageQueue;
+	private Map<Integer,Elevator> elevators;
 
 	private ArrayList<Integer> elevator1Request, elevator2Request;
 	
@@ -35,10 +40,12 @@ public class Scheduler extends Subsystem implements Runnable {
 	private DatagramSocket floorSocket, elevatorSocket;
 	
 	public Scheduler() {
-		floorRequests = new ArrayList<Floor>();
-		elevatorStatus = new ArrayList<Elevator>();
+		floorRequestQueue = new ArrayList<Floor>();
+		floorRequestQueue.add(new Floor(4,1,8));
+		elevatorMessageQueue = new ArrayList<ElevatorMessage>();
 		elevator1Request = new ArrayList<>();
 		elevator2Request = new ArrayList<>();
+		elevators = new HashMap<Integer, Elevator>();
 		
 		//This will change depending on the amount of elevators in the subsystem running
 		position = new int[2];
@@ -67,15 +74,7 @@ public class Scheduler extends Subsystem implements Runnable {
 			se.printStackTrace();
 			System.exit(1);
 		}
-		/*
-		try {
-			sendSocket = new DatagramSocket();
-		} catch (SocketException se) {
-			se.printStackTrace();
-			System.exit(1);
-		}
-		*/
-		
+	
 		Thread elevatorHandler = new Thread(new ElevatorThread(this,elevatorSocket));
 		Thread floorHandler = new Thread(new FloorThread(this,floorSocket));
 		
@@ -84,23 +83,31 @@ public class Scheduler extends Subsystem implements Runnable {
 	}
 
 	
-	public synchronized void updateElevatorStatus(Elevator item) {
-		for(Elevator elevator: elevatorStatus) {
-			if(elevator.getId() == item.getId()) {
-				elevator.update(item);
-				notifyAll();
-				return;
-			}
+	public synchronized void addElevatorMessage(ElevatorMessage item) {
+		if(!elevators.containsKey(item.getId())) {
+			elevators.put(item.getId(), new Elevator(item.getId(),item.getState(),item.getCurrFloor(),item.getTargetFloor(),0,new ArrayList<Floor>(),new ArrayList<Integer>()));
 		}
-		elevatorStatus.add(item);
+		if(elevatorMessageQueue.add(item)) {
+			System.out.println("New elevator message: " + item);
+		}
+		
 		notifyAll();
 	}
 	
+	public synchronized ElevatorMessage getElevatorMessage() {
+		if(elevatorMessageQueue.isEmpty()) {
+			notifyAll();
+			return null;
+		}
+		notifyAll();
+		return elevatorMessageQueue.remove(0);
+	}
+	
 	public synchronized void addFloorRequest(Floor item) {
-		floorRequests.add(item);
+		floorRequestQueue.add(item);
 		notifyAll();
 	}
-
+/*
 	public byte[] decideDestination(int direc, int port, ArrayList<Integer> request){
 
 		int destinationFloor = 8;
@@ -278,11 +285,87 @@ public class Scheduler extends Subsystem implements Runnable {
 		 byte[] floor = decideDestination(direction[port-1], port, request);
 		 return floor;
 	}
+	*/
+	public SchedulerInstruction.INSTRUCTION processElevatorMessage(ElevatorMessage message) {
+		Elevator elevator = elevators.get(message.getId());
+		elevator.update(message);
+		SchedulerInstruction.INSTRUCTION command = INSTRUCTION.ELEVETOR_WAIT;
+		if(!elevator.hasPendingTask()) {
+			if(floorRequestQueue.isEmpty()) {
+				//tell elevator to wait
+				command = INSTRUCTION.ELEVETOR_WAIT;
+			}else {
+				//give elevator a floor request
+				Floor floorData = floorRequestQueue.remove(0);
+				elevator.getPickUpFloors().add(floorData);
+				elevator.setDestFloor(floorData.getFloorNumber());
+			}
+		}
+		
+		switch(elevator.getState()) {
+		case 3:
+		case 0: // stopped at floor
+			if(!elevator.getPickUpFloors().isEmpty()) {
+				if(elevator.getCurrFloor() == elevator.getPickUpFloors().get(0).getFloorNumber()) {
+					//pick up passenger
+					elevator.setDestFloor(elevator.getPickUpFloors().remove(0).getCarButton());
+					elevator.getDropOffFloors().add(elevator.getDestFloor());
+				}
+			}
+			
+			if(!elevator.getDropOffFloors().isEmpty()) {
+				if(elevator.getCurrFloor() == elevator.getDropOffFloors().get(0)) {
+					//drop off passenger
+					
+					elevator.getDropOffFloors().remove(0);
+				}
+			}
+
+			if(elevator.getCurrFloor() > elevator.getDestFloor()) {
+				//move down
+				command = INSTRUCTION.ELEVETOR_DOWN;
+			}else if(elevator.getCurrFloor() < elevator.getDestFloor()) {
+				//move up
+				command = INSTRUCTION.ELEVETOR_UP;
+			}
+					
+			break;
+		case 1: // moving up
+					
+			if(elevator.getDestFloor() == elevator.getCurrFloor() + 1) {
+				//Next floor elevator needs to stop
+				command = INSTRUCTION.ELEVETOR_STOP;
+			}else {
+				//continue moving to next floor
+				command = INSTRUCTION.ELEVETOR_UP;
+			}
+			break;
+		case 2: // moving down
+			if(elevator.getDestFloor() == elevator.getCurrFloor() - 1) {
+				//Next floor elevator needs to stop
+				command = INSTRUCTION.ELEVETOR_STOP;
+			}else {
+				//continue moving to next floor
+				command = INSTRUCTION.ELEVETOR_DOWN;
+			}
+			break;
+		}
+		return command;
+	}
 	
 	@Override
 	public void run() {
 		
-		
+		while(true) {
+			ElevatorMessage elevatorMessage = this.getElevatorMessage();
+			if(elevatorMessage != null) {
+				System.out.println("Sending reply");	
+				SchedulerInstruction.INSTRUCTION message = processElevatorMessage(elevatorMessage);
+				byte response[] = {message.getValue()};
+				new Thread(new MessageSender(response, elevatorMessage.getPort())).start();;
+			}
+			
+		}
 		
 		/*
 		byte floorData[] = new byte[100];
@@ -340,10 +423,10 @@ public class Scheduler extends Subsystem implements Runnable {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		/*
+		
 		Thread schedular = new  Thread(new Scheduler());
 		schedular.start();
-		*/
-		Scheduler sch = new Scheduler();
+		
+		
 	}
 }

@@ -8,29 +8,34 @@ package elevator;
 
 public class Motor {
 	public enum MotorState {
-		GoingUp{
-			public byte getByteValue() {
+		STOP{
+			public byte getValue() {
+				return 0;
+			}
+		},
+		UP{
+			public byte getValue() {
 				return 1;
 			}
 		},
-		GoingDown{
-			public byte getByteValue() {
+		DOWN{
+			public byte getValue() {
 				return 2;
 			}
 		},
-		Stopped{
-			public byte getByteValue() {
-				return 0;
+		STATIONARY{
+			public byte getValue() {
+				return 3;
 			}
 		};
 
-		public abstract byte getByteValue();
+		public abstract byte getValue();
 	}
 
 	private MotorState state;
 
 	public Motor() {
-		this.state = MotorState.Stopped;
+		this.state = MotorState.STATIONARY;
 	}
 
 	public void setMotorState (MotorState state) {

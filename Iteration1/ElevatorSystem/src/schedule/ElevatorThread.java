@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import schedule.common.Elevator;
+import schedule.common.ElevatorMessage;
 import schedule.common.Subsystem;
 
 public class ElevatorThread extends Subsystem implements Runnable{
@@ -31,12 +32,13 @@ public class ElevatorThread extends Subsystem implements Runnable{
 	public void run() {
 		while (true) {
 			// Receive packet
-			byte elevatorData[] = new byte[100];
+			byte elevatorData[] = new byte[10];
 			elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
 			this.receivePacket(elevatorSocket, elevatorPacket,"ElevatorThread");
-			scheduler.updateElevatorStatus(new Elevator(1,0,1,0,new ArrayList<Integer>(),new ArrayList<Integer>()));
+			
+			scheduler.addElevatorMessage(new ElevatorMessage(elevatorPacket.getPort(), elevatorData[0],elevatorData[1],elevatorData[2],elevatorData[3],elevatorData[4]));
 			// Print out received packet
-			this.printPacket(elevatorPacket);
+			//this.printPacket(elevatorPacket);
 		}
 	}
 }

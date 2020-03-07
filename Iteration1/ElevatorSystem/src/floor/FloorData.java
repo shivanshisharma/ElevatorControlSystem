@@ -39,5 +39,10 @@ public class FloorData {
 	public String toString() {
 		return time + " " + floorNumber + " " + (up? "Up":"Down") + " " + carButton;
 	}
+	
+	public byte[] toBytes() {
+		byte message[] = {(byte)floorNumber, (byte)(up? 1:0), (byte)carButton};
+		return message;
+	}
 
 }

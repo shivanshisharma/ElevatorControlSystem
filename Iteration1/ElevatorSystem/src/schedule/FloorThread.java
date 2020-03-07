@@ -15,25 +15,17 @@ public class FloorThread extends Subsystem implements Runnable {
 	public FloorThread(Scheduler scheduler, DatagramSocket socket) {
 		this.scheduler = scheduler;
 		this.floorSocket = socket;
-		// Create socket to send and receive
-		/*
-		try {
-			floorSocket = new DatagramSocket(23);
-		} catch (SocketException se) {
-			se.printStackTrace();
-			System.exit(1);
-		}
-		*/
+		
 	}
 
 	@Override
 	public void run() {
 		while (true) {
 			// Receive packet
-			byte floorData[] = new byte[100];
+			byte floorData[] = new byte[3];
 			floorPacket = new DatagramPacket(floorData, floorData.length);
 			this.receivePacket(floorSocket, floorPacket,"FloorThread");
-			scheduler.addFloorRequest(new Floor(5, true, 8));
+			scheduler.addFloorRequest(new Floor(floorData[0], floorData[1], floorData[2]));
 			// Print out received packet
 			this.printPacket(floorPacket);
 		}

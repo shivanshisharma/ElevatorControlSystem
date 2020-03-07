@@ -5,14 +5,16 @@ import java.util.List;
 public class Elevator {
 	private int id;
 	private int currFloor;
+	private int destFloor;
 	private int state;
 	private int passengers;
-	private List<Integer> pickUpFloors;
+	private List<Floor> pickUpFloors;
 	private List<Integer> dropOffFloors;
 
-	public Elevator(int id, int currFloor, int state, int passengers, List<Integer> pickUpFloors, List<Integer> dropOffFloors) {
+	public Elevator(int id, int currFloor,int destFloor, int state, int passengers, List<Floor> pickUpFloors, List<Integer> dropOffFloors) {
 		this.id = id;
 		this.currFloor = currFloor;
+		this.setDestFloor(destFloor);
 		this.state = state;
 		this.setPassengers(passengers);
 		this.setPickUpFloors(pickUpFloors);
@@ -46,11 +48,11 @@ public class Elevator {
 		this.passengers = passengers;
 	}
 
-	public List<Integer> getPickUpFloors() {
+	public List<Floor> getPickUpFloors() {
 		return pickUpFloors;
 	}
 
-	public void setPickUpFloors(List<Integer> pickUpFloors) {
+	public void setPickUpFloors(List<Floor> pickUpFloors) {
 		this.pickUpFloors = pickUpFloors;
 	}
 
@@ -61,13 +63,22 @@ public class Elevator {
 	public void setDropOffFloors(List<Integer> dropOffFloors) {
 		this.dropOffFloors = dropOffFloors;
 	}
+	
+	public boolean hasPendingTask() {
+		return !pickUpFloors.isEmpty() || !dropOffFloors.isEmpty();
+	}
 
-	public void update(Elevator elevator) {
-		this.currFloor = elevator.currFloor;
-		this.state = elevator.state;
-		this.passengers = elevator.passengers;
-		this.dropOffFloors = elevator.dropOffFloors;
-		this.pickUpFloors = elevator.pickUpFloors;
+	public void update(ElevatorMessage status) {
+		this.currFloor = status.getCurrFloor();
+		this.state = status.getState();
+	}
+
+	public int getDestFloor() {
+		return destFloor;
+	}
+
+	public void setDestFloor(int destFloor) {
+		this.destFloor = destFloor;
 	}
 
 }

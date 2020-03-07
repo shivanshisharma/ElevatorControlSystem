@@ -24,6 +24,7 @@ public class Elevator extends Subsystem implements Runnable {
 	int id;
 	private int targetFloor;
 	private boolean operational;
+	private int nextFloor;
 
 	private DatagramPacket elevatorDataPacket, instructionPacket;
 	private DatagramSocket sendReceiveSocket;
@@ -35,8 +36,9 @@ public class Elevator extends Subsystem implements Runnable {
 	private ElevatorButton [] buttonArray;
 	private ElevatorLight[] lightArray;
 	private String direction;
-	private ElevatorSystem state;
+	private ElevatorSubsystem state;
 	private Door door; 
+	private static final int WAIT = 2000;
 
 	public Elevator(int id) {
 
@@ -52,6 +54,7 @@ public class Elevator extends Subsystem implements Runnable {
 		this.operational = true;
 		this.currFloor = 0;
 		this.targetFloor = 0;
+		this.nextFloor = 0;
 
 		buttonArray = new ElevatorButton[7];
 		buttonArray[0] = button1;
@@ -67,43 +70,97 @@ public class Elevator extends Subsystem implements Runnable {
 		lightArray[3] = light4;
 		lightArray[4] = light5;
 
+		door = new Door();
 		motor = new Motor();
-		state = new ElevatorSystem();
+		state = new ElevatorSubsystem();
 	}
 
 	@Override
 	public void run() {
-		// Create datagram packet
-		elevatorDataPacket = this.createPacket(this.toString().getBytes(), 2);
-
-		// Print out info that is in the packet before sending
-		this.printPacket(elevatorDataPacket);
-
-		// Send the datagram packet to the host on port 23
-		this.sendPacket(sendReceiveSocket, elevatorDataPacket, "Elevator");
-
-		// Receive response packet
-		byte data[] = new byte[100];
-		instructionPacket = new DatagramPacket(data, data.length);
-		this.receivePacket(sendReceiveSocket, instructionPacket, "Elevator");
-
-		// Print out info that is in the packet before sending
-		this.printPacket(elevatorDataPacket);
-
-		// Send the datagram packet to the host on port 23
-		this.sendPacket(sendReceiveSocket, elevatorDataPacket, "Elevator");
-
-		// We're finished, so close the socket.
-		sendReceiveSocket.close();
-
 		while(true) {
-			if(isOperational()) {
-				System.out.println("Moving Elevator:"+getId());
-			} else {
-				System.out.println("Elevator "+getId()+": is NOT operational");
+			// Create datagram packet
+			elevatorDataPacket = this.createPacket(this.toMessage(), 2);
 
-			}
+			// Print out info that is in the packet before sending
+			//this.printPacket(elevatorDataPacket);
+
+			// Send the datagram packet to the host on port 23
+			this.sendPacket(sendReceiveSocket, elevatorDataPacket, "Elevator");
+
+			// Receive response packet
+			byte data[] = new byte[10];
+			instructionPacket = new DatagramPacket(data, data.length);
+			this.receivePacket(sendReceiveSocket, instructionPacket, "Elevator");
+		
+			setState(data[0]);
+
 		}
+	}
+	
+	private void setState(int instruction) {
+		switch (instruction) {
+			case 0: // Scheduler sent stop command
+				
+				System.out.println("Stopping at next floor");
+				if(motor.getMotorState().equals(MotorState.DOWN)) {
+					currFloor --;
+				}else if(motor.getMotorState().equals(MotorState.UP)) {
+					currFloor++;
+				}
+				motor.setMotorState(MotorState.STOP);
+				try {
+					Thread.sleep(WAIT);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Opening doors");
+				door.setDoorState(DoorState.OPEN);
+				System.out.println("Stopped at: " + currFloor);
+				//wait for people to get on
+				break;
+			case 1: //scheudler sent up command
+				System.out.println("Closing doors");
+				door.setDoorState(DoorState.CLOSED);
+				motor.setMotorState(MotorState.UP);
+				System.out.println("Going up from floor " + currFloor);
+				
+				try {
+					Thread.sleep(WAIT);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				currFloor++;
+				System.out.println("Reached floor " + currFloor);
+				break;
+			case 2: //scheduler sent down command
+				System.out.println("Closing doors");
+				door.setDoorState(DoorState.CLOSED);
+				motor.setMotorState(MotorState.DOWN);
+				System.out.println("Going down from floor " + currFloor);
+				try {
+					Thread.sleep(WAIT);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				currFloor --;
+				System.out.println("Reached floor " + currFloor);
+				break;
+			case 3: //scheduler sent wait command
+				System.out.println("Waiting for insttruction at floor " + currFloor);
+				motor.setMotorState(MotorState.STATIONARY);
+				try {
+					Thread.sleep(WAIT);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				door.setDoorState(DoorState.OPEN);
+				break;
+		}
+		
 	}
 	// This class Process the Request received from Scheduler and calls approproate methods.
 	public void processRequest(/* Enter the Content from Packet*/) {
@@ -134,44 +191,20 @@ public class Elevator extends Subsystem implements Runnable {
 
 	}
 	private void closeDoor() {
-		door.setDoorState(DoorState.Closed);
+		door.setDoorState(DoorState.CLOSED);
 	}
 
 	private void openDoor() {
-		door.setDoorState(DoorState.Open);
-	}
-
-	public String toString() {
-		return this.motor.getMotorState() + " " + this.currFloor + " "  + this.targetFloor;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public boolean isOperational() {
-		return operational;
-	}
-
-	public void setOperational(boolean bool) {
-		operational = bool;
-	}
-
-	public MotorState getDirection() {
-		return motor.getMotorState();
+		door.setDoorState(DoorState.OPEN);
 	}
 
 	public void setMotor(MotorState direction) {
 		System.out.println("Elevator "+getId()+": set motor to "+this.direction);
 		motor.setMotorState(direction);
-		if(direction.equals(MotorState.GoingUp)) {
-			state.requestUp();
-		}else if(direction.equals(MotorState.GoingDown)) {
-			state.requestDown();
-		}else if(direction.equals(MotorState.Stopped)){
-			state.requestWait();
-		}
+	}
 
+	public MotorState getDirection() {
+		return motor.getMotorState();
 	}
 
 	public void increaseFloor(int destination) {
@@ -184,10 +217,34 @@ public class Elevator extends Subsystem implements Runnable {
 		System.out.println("Elevator "+getId()+": -> floor "+this.currFloor);
 	}
 
-	public static void main(String[] args) {
-		Thread elevator1 = new Thread(new Elevator(1));
-		elevator1.start();
-
+	public String toString() {
+		return "id: " + id +  " currFloor: " + this.currFloor + " motor: " + this.motor.getMotorState() + " nextFloor: "  + this.nextFloor+ " targetFloor: "  + this.targetFloor;
+	}
+	
+	public byte[] toMessage() {
+		byte message[] = new byte[5];
+		message[0] = (byte) id;
+		message[1] = motor.getMotorState().getValue();
+		message[2] = (byte) currFloor;
+		message[3] = (byte) nextFloor;
+		message[4] = (byte) targetFloor;
+		return message;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
+	public boolean isOperational() {
+		return operational;
+	}
+
+	public void setOperational(boolean bool) {
+		operational = bool;
+	}
+
+	public static void main(String[] args) {
+		Thread elevator1 = new Thread(new Elevator(1));
+		elevator1.start();	
+	}
 }

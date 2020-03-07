@@ -9,12 +9,12 @@ package schedule.common;
  */
 public class Floor {
 	private int floorNumber;
-	private boolean up;
+	private int dir;
 	private int carButton;
 
-	public Floor(int floorNumber, boolean up, int carButton) {
+	public Floor(int floorNumber, int dir, int carButton) {
 		this.floorNumber = floorNumber;
-		this.up = up;
+		this.dir = dir;
 		this.carButton = carButton;
 	}
 
@@ -22,8 +22,8 @@ public class Floor {
 		return carButton;
 	}
 
-	public boolean isUp() {
-		return up;
+	public int isUp() {
+		return dir;
 	}
 
 	public int getFloorNumber() {
@@ -31,7 +31,7 @@ public class Floor {
 	}
 
 	public String toString() {
-		return floorNumber + " " + (up? "Up":"Down") + " " + carButton;
+		return floorNumber + " " + dir + " " + carButton;
 	}
 
 }
