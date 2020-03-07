@@ -74,7 +74,7 @@ public class Elevator extends Subsystem implements Runnable {
 	@Override
 	public void run() {
 		// Create datagram packet
-		elevatorDataPacket = this.createPacket(this.toString().getBytes(), 1);
+		elevatorDataPacket = this.createPacket(this.toString().getBytes(), 2);
 
 		// Print out info that is in the packet before sending
 		this.printPacket(elevatorDataPacket);
@@ -87,17 +87,11 @@ public class Elevator extends Subsystem implements Runnable {
 		instructionPacket = new DatagramPacket(data, data.length);
 		this.receivePacket(sendReceiveSocket, instructionPacket, "Elevator");
 
-		// Print the received datagram.
-		//this.printPacket(instructionPacket);
-
-		//		elevatorDataPacket = this.createPacket("Arrived at the floor".getBytes(), 1);
-
-		//		// Print out info that is in the packet before sending
+		// Print out info that is in the packet before sending
 		this.printPacket(elevatorDataPacket);
 
 		// Send the datagram packet to the host on port 23
 		this.sendPacket(sendReceiveSocket, elevatorDataPacket, "Elevator");
-
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();

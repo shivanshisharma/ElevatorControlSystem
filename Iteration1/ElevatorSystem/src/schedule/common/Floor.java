@@ -7,14 +7,12 @@ package schedule.common;
  * @author fareedahmad
  *
  */
-public class FloorData {
-	private String time;
+public class Floor {
 	private int floorNumber;
 	private boolean up;
 	private int carButton;
 
-	public FloorData(String time, int floorNumber, boolean up, int carButton) {
-		this.time = time;
+	public Floor(int floorNumber, boolean up, int carButton) {
 		this.floorNumber = floorNumber;
 		this.up = up;
 		this.carButton = carButton;
@@ -32,12 +30,8 @@ public class FloorData {
 		return floorNumber;
 	}
 
-	public String getTime() {
-		return time;
-	}
-
 	public String toString() {
-		return time + " " + floorNumber + " " + (up? "Up":"Down") + " " + carButton;
+		return floorNumber + " " + (up? "Up":"Down") + " " + carButton;
 	}
 
 }

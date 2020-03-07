@@ -5,8 +5,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import schedule.common.ElevatorData;
-import schedule.common.FloorData;
+import schedule.common.Elevator;
+import schedule.common.Floor;
 import schedule.common.Subsystem;
 
 /**
@@ -20,8 +20,8 @@ import schedule.common.Subsystem;
 public class Scheduler extends Subsystem implements Runnable {
 
 	private ArrayList<Integer> schedulerElevator = new ArrayList<>();
-	private List<FloorData> floorRequests = new ArrayList<>();
-	private List<ElevatorData> elevatorRequests =  new ArrayList<>();
+	private List<Floor> floorRequests;
+	private List<Elevator> elevatorStatus;
 
 	private ArrayList<Integer> elevator1Request, elevator2Request;
 	
@@ -31,12 +31,12 @@ public class Scheduler extends Subsystem implements Runnable {
 	
 	Map<Integer, ArrayList<Integer>> requestMap;
 
-	
 	private DatagramPacket floorPacket, elevatorPacket, instructionPacket;
-	private DatagramSocket receiveSocket, sendSocket;
+	private DatagramSocket floorSocket, elevatorSocket;
 	
 	public Scheduler() {
-		
+		floorRequests = new ArrayList<Floor>();
+		elevatorStatus = new ArrayList<Elevator>();
 		elevator1Request = new ArrayList<>();
 		elevator2Request = new ArrayList<>();
 		
@@ -55,23 +55,49 @@ public class Scheduler extends Subsystem implements Runnable {
 		direction[1] = 2;
 		
 		try {
-			receiveSocket = new DatagramSocket(1);
+			floorSocket = new DatagramSocket(1);
 		} catch (SocketException se) {
 			se.printStackTrace();
 			System.exit(1);
 		}
-		
+
+		try {
+			elevatorSocket = new DatagramSocket(2);
+		} catch (SocketException se) {
+			se.printStackTrace();
+			System.exit(1);
+		}
+		/*
 		try {
 			sendSocket = new DatagramSocket();
 		} catch (SocketException se) {
 			se.printStackTrace();
 			System.exit(1);
 		}
+		*/
+		
+		Thread elevatorHandler = new Thread(new ElevatorThread(this,elevatorSocket));
+		Thread floorHandler = new Thread(new FloorThread(this,floorSocket));
+		
+		elevatorHandler.start();
+		floorHandler.start();
 	}
 
 	
-	public synchronized void addElevatorRequest(ElevatorData item) {
-		elevatorRequests.add(item);
+	public synchronized void updateElevatorStatus(Elevator item) {
+		for(Elevator elevator: elevatorStatus) {
+			if(elevator.getId() == item.getId()) {
+				elevator.update(item);
+				notifyAll();
+				return;
+			}
+		}
+		elevatorStatus.add(item);
+		notifyAll();
+	}
+	
+	public synchronized void addFloorRequest(Floor item) {
+		floorRequests.add(item);
 		notifyAll();
 	}
 
@@ -255,6 +281,10 @@ public class Scheduler extends Subsystem implements Runnable {
 	
 	@Override
 	public void run() {
+		
+		
+		
+		/*
 		byte floorData[] = new byte[100];
 		floorPacket = new DatagramPacket(floorData, floorData.length);
 		this.receivePacket(receiveSocket, floorPacket, "Scheduler");
@@ -273,7 +303,7 @@ public class Scheduler extends Subsystem implements Runnable {
 		positions[port-1] = elevatorData[0];
 		directions[port-1] = elevatorData[1];
 		*/
-		
+		/*
 		// Send the datagram packet to the Elevator
 		byte[] floor = "New Instruction".getBytes();
 		if(!elevator1Request.isEmpty()) {
@@ -303,13 +333,17 @@ public class Scheduler extends Subsystem implements Runnable {
 
 		// Send the datagram packet to the Elevator
 		this.sendPacket(sendSocket, floorPacket, "Scheduler");
+		*/
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		/*
 		Thread schedular = new  Thread(new Scheduler());
 		schedular.start();
+		*/
+		Scheduler sch = new Scheduler();
 	}
 }
