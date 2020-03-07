@@ -267,8 +267,8 @@ public class Scheduler extends Subsystem implements Runnable {
 		if(!elevator2Request.isEmpty()) {
 			floor = sendElevator(1, elevator1Request);
 		}
-		
 		instructionPacket = this.createPacket(floor, elevatorPacket.getPort());
+
 
 		// Print out info that is in the packet before sending
 		this.printPacket(instructionPacket);
