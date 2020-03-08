@@ -106,6 +106,54 @@ public class Floor extends Subsystem implements Runnable {
 		return data;
 	}
 
+	public FloorButton getUpFloorButton() {
+		return upFloorButton;
+	}
+
+	public void setUpFloorButton(FloorButton upFloorButton) {
+		this.upFloorButton = upFloorButton;
+	}
+
+	public FloorButton getDownFloorButton() {
+		return downFloorButton;
+	}
+
+	public void setDownFloorButton(FloorButton downFloorButton) {
+		this.downFloorButton = downFloorButton;
+	}
+
+	public FloorLamp getUpLamp() {
+		return upLamp;
+	}
+
+	public void setUpLamp(FloorLamp upLamp) {
+		this.upLamp = upLamp;
+	}
+
+	public FloorLamp getDownLamp() {
+		return downLamp;
+	}
+
+	public void setDownLamp(FloorLamp downLamp) {
+		this.downLamp = downLamp;
+	}
+
+	public DirectionLamp getUpDirectionLamp() {
+		return upDirectionLamp;
+	}
+
+	public void setUpDirectionLamp(DirectionLamp upDirectionLamp) {
+		this.upDirectionLamp = upDirectionLamp;
+	}
+
+	public DirectionLamp getDownDirectionLamp() {
+		return downDirectionLamp;
+	}
+
+	public void setDownDirectionLamp(DirectionLamp downDirectionLamp) {
+		this.downDirectionLamp = downDirectionLamp;
+	}
+
 	/**
 	 * @param args
 	 */

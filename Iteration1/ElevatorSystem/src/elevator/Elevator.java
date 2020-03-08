@@ -71,7 +71,9 @@ public class Elevator extends Subsystem implements Runnable {
 		lightArray[4] = light5;
 
 		door = new Door();
+		door.setDoorState(DoorState.OPEN);
 		motor = new Motor();
+		motor.setMotorState(MotorState.STATIONARY);
 		state = new ElevatorSubsystem();
 	}
 
@@ -97,7 +99,7 @@ public class Elevator extends Subsystem implements Runnable {
 		}
 	}
 	
-	private void setState(int instruction) {
+	public void setState(int instruction) {
 		switch (instruction) {
 			case 0: // Scheduler sent stop command
 				
@@ -149,7 +151,7 @@ public class Elevator extends Subsystem implements Runnable {
 				System.out.println("Reached floor " + currFloor);
 				break;
 			case 3: //scheduler sent wait command
-				System.out.println("Waiting for insttruction at floor " + currFloor);
+				System.out.println("Waiting for instruction at floor " + currFloor);
 				motor.setMotorState(MotorState.STATIONARY);
 				try {
 					Thread.sleep(WAIT);
@@ -199,7 +201,7 @@ public class Elevator extends Subsystem implements Runnable {
 	}
 
 	public void setMotor(MotorState direction) {
-		System.out.println("Elevator "+getId()+": set motor to "+this.direction);
+		System.out.println("Elevator "+getId()+": set motor to "+direction);
 		motor.setMotorState(direction);
 	}
 
@@ -243,8 +245,34 @@ public class Elevator extends Subsystem implements Runnable {
 		operational = bool;
 	}
 
+	public int getCurrFloor() {
+		return currFloor;
+	}
+
+	public void setCurrFloor(int currFloor) {
+		this.currFloor = currFloor;
+	}
+
+	public Motor getMotor() {
+		return motor;
+	}
+
+	public void setMotor(Motor motor) {
+		this.motor = motor;
+	}
+
+	public Door getDoor() {
+		return door;
+	}
+
+	public void setDoor(DoorState doorState) {
+		this.door.setDoorState(doorState); 
+	}
+
 	public static void main(String[] args) {
 		Thread elevator1 = new Thread(new Elevator(1));
+		Thread elevator2 = new Thread(new Elevator(2));
 		elevator1.start();	
+		elevator2.start();	
 	}
 }

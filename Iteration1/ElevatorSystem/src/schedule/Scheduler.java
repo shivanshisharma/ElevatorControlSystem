@@ -41,7 +41,6 @@ public class Scheduler extends Subsystem implements Runnable {
 	
 	public Scheduler() {
 		floorRequestQueue = new ArrayList<Floor>();
-		floorRequestQueue.add(new Floor(4,1,8));
 		elevatorMessageQueue = new ArrayList<ElevatorMessage>();
 		elevator1Request = new ArrayList<>();
 		elevator2Request = new ArrayList<>();
@@ -107,6 +106,7 @@ public class Scheduler extends Subsystem implements Runnable {
 		floorRequestQueue.add(item);
 		notifyAll();
 	}
+	
 /*
 	public byte[] decideDestination(int direc, int port, ArrayList<Integer> request){
 
@@ -366,58 +366,29 @@ public class Scheduler extends Subsystem implements Runnable {
 			}
 			
 		}
-		
-		/*
-		byte floorData[] = new byte[100];
-		floorPacket = new DatagramPacket(floorData, floorData.length);
-		this.receivePacket(receiveSocket, floorPacket, "Scheduler");
-		populateElevatorLists((int)floorData[2]);
-
-		// Print out received packet
-		this.printPacket(floorPacket);
-		
-		byte elevatorData[] = new byte[100];
-		elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
-		this.receivePacket(receiveSocket, elevatorPacket, "Scheduler");
-		
-		// Print out received packet
-		this.printPacket(elevatorPacket);
-		/*int port = elevatorData[2];
-		positions[port-1] = elevatorData[0];
-		directions[port-1] = elevatorData[1];
-		*/
-		/*
-		// Send the datagram packet to the Elevator
-		byte[] floor = "New Instruction".getBytes();
-		if(!elevator1Request.isEmpty()) {
-			floor = sendElevator(1, elevator1Request);
-		}
-		if(!elevator2Request.isEmpty()) {
-			floor = sendElevator(1, elevator1Request);
-		}
-		instructionPacket = this.createPacket(floor, elevatorPacket.getPort());
-
-
-		// Print out info that is in the packet before sending
-		this.printPacket(instructionPacket);
-		
-		this.sendPacket(sendSocket, instructionPacket, "Scheduler");
-		
-		elevatorPacket = new DatagramPacket(elevatorData, elevatorData.length);
-		this.receivePacket(receiveSocket, elevatorPacket, "Scheduler");
-
-		// Print out received packet
-		this.printPacket(elevatorPacket);
-		
-		floorPacket = this.createPacket(elevatorPacket.getData(), floorPacket.getPort());
-
-		// Print out info that is in the packet before sending
-		this.printPacket(floorPacket);
-
-		// Send the datagram packet to the Elevator
-		this.sendPacket(sendSocket, floorPacket, "Scheduler");
-		*/
 	}
+	
+	
+
+	public List<Floor> getFloorRequestQueue() {
+		return floorRequestQueue;
+	}
+
+
+	public void setFloorRequestQueue(List<Floor> floorRequestQueue) {
+		this.floorRequestQueue = floorRequestQueue;
+	}
+
+
+	public List<ElevatorMessage> getElevatorMessageQueue() {
+		return elevatorMessageQueue;
+	}
+
+
+	public void setElevatorMessageQueue(List<ElevatorMessage> elevatorMessageQueue) {
+		this.elevatorMessageQueue = elevatorMessageQueue;
+	}
+
 
 	/**
 	 * @param args
