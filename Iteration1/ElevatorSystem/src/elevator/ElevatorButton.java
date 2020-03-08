@@ -5,7 +5,7 @@ package elevator;
  * isSelected = true means the floor is selected 
  * */
 public class ElevatorButton {
-	public boolean isSelected;
+	private boolean isSelected;
 	byte floorNumber;
 
 	public ElevatorButton(byte b) {
@@ -13,14 +13,18 @@ public class ElevatorButton {
 		floorNumber = b;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public void setButtonState(boolean state) {
-		
+
 		isSelected = state;
-	
+
 	}
 	public boolean getButtonState() {
-		
+
 		return isSelected;
+	}
+
+	public byte getFloorNumber() {
+		return floorNumber;
 	}
 }

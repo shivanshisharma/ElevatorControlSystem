@@ -7,25 +7,47 @@ package elevator;
  * */
 
 public class Motor {
-	private byte motorState;
+	public enum MotorState {
+		STOP{
+			public byte getValue() {
+				return 0;
+			}
+		},
+		UP{
+			public byte getValue() {
+				return 1;
+			}
+		},
+		DOWN{
+			public byte getValue() {
+				return 2;
+			}
+		},
+		STATIONARY{
+			public byte getValue() {
+				return 3;
+			}
+		};
 
+		public abstract byte getValue();
+	}
+
+	private MotorState state;
 
 	public Motor() {
-		
-		motorState = 0;
-		
+		this.state = MotorState.STATIONARY;
 	}
-	
-	public void setMotorState (byte state) {
-		
-		motorState = state;
+
+	public void setMotorState (MotorState state) {
+
+		this.state = state;
 	}
-	
-	
-	public int getMotorState() {
-		
-		return motorState;
-		
+
+
+	public MotorState getMotorState() {
+
+		return state;
+
 	}	
-	
+
 }

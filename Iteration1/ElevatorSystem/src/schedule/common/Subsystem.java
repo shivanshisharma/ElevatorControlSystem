@@ -37,20 +37,20 @@ public class Subsystem {
 		}
 		return packet;
 	}
-	
+
 	protected void receivePacket(DatagramSocket receivingSocket, DatagramPacket receivingPacket,String name) {
-		System.out.println(name + ": Waiting for Packet.\n");
+		//System.out.println(name + ": Waiting for Packet.\n");
 		try {
 			// Block until a datagram is received via socket.
-			System.out.println("Waiting...");
+			//System.out.println("Waiting...");
 			receivingSocket.receive(receivingPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		System.out.println(name + ": Packet received:");
+		//System.out.println(name + ": Packet received:");
 	}
-	
+
 	protected void sendPacket(DatagramSocket sendingSocket, DatagramPacket packet,String name) {
 		System.out.println(name + ": Sending packet:");
 		try {

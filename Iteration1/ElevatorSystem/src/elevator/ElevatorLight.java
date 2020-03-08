@@ -6,7 +6,7 @@ public class ElevatorLight {
 	void light() {
 		isOn = false;
 		// TODO Auto-generated method stub
-		
+
 	}
 	public void setLight(boolean status) {
 		isOn = status;
