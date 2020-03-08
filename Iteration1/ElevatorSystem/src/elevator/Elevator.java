@@ -35,8 +35,6 @@ public class Elevator extends Subsystem implements Runnable {
 	private Motor motor;
 	private ElevatorButton [] buttonArray;
 	private ElevatorLight[] lightArray;
-	private String direction;
-	private ElevatorSubsystem state;
 	private Door door; 
 	private static final int WAIT = 2000;
 
@@ -74,7 +72,6 @@ public class Elevator extends Subsystem implements Runnable {
 		door.setDoorState(DoorState.OPEN);
 		motor = new Motor();
 		motor.setMotorState(MotorState.STATIONARY);
-		state = new ElevatorSubsystem();
 	}
 
 	@Override
@@ -82,9 +79,6 @@ public class Elevator extends Subsystem implements Runnable {
 		while(true) {
 			// Create datagram packet
 			elevatorDataPacket = this.createPacket(this.toMessage(), 2);
-
-			// Print out info that is in the packet before sending
-			//this.printPacket(elevatorDataPacket);
 
 			// Send the datagram packet to the host on port 23
 			this.sendPacket(sendReceiveSocket, elevatorDataPacket, "Elevator");
@@ -113,7 +107,6 @@ public class Elevator extends Subsystem implements Runnable {
 				try {
 					Thread.sleep(WAIT);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.out.println("Opening doors");
@@ -130,7 +123,6 @@ public class Elevator extends Subsystem implements Runnable {
 				try {
 					Thread.sleep(WAIT);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				currFloor++;
@@ -144,7 +136,6 @@ public class Elevator extends Subsystem implements Runnable {
 				try {
 					Thread.sleep(WAIT);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				currFloor --;
@@ -156,7 +147,6 @@ public class Elevator extends Subsystem implements Runnable {
 				try {
 					Thread.sleep(WAIT);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				door.setDoorState(DoorState.OPEN);
@@ -164,42 +154,6 @@ public class Elevator extends Subsystem implements Runnable {
 		}
 		
 	}
-	// This class Process the Request received from Scheduler and calls approproate methods.
-	public void processRequest(/* Enter the Content from Packet*/) {
-		//Task 0 = Pick up -1 Drop off 
-		// For sample Floor is hardcoded to 2
-		/*
-		int task = 0;
-		increaseFloor(2);
-		setMotor(1);
-		openDoor();
-		closeDoor();
-
-
-		if(task == 0) {
-			setMotor();
-			buttonArray[2].setButtonState(true);
-			lightArray[2].setLight(true);
-		} else if ( task == -1 ) {
-			setMotor(2);
-			buttonArray[2].setButtonState(false);
-			lightArray[2].setLight(false);
-		} else {
-			buttonArray[2].setButtonState(false);
-			lightArray[2].setLight(false);
-			setMotor(2);
-		}
-		 */
-
-	}
-	private void closeDoor() {
-		door.setDoorState(DoorState.CLOSED);
-	}
-
-	private void openDoor() {
-		door.setDoorState(DoorState.OPEN);
-	}
-
 	public void setMotor(MotorState direction) {
 		System.out.println("Elevator "+getId()+": set motor to "+direction);
 		motor.setMotorState(direction);

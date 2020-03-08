@@ -80,17 +80,18 @@ public class Floor extends Subsystem implements Runnable {
 	public void run() {
 		// Input file 
 		readFile();
-
+		for(FloorData request: data) {
 		// read input
-		sendingPacket = this.createPacket(data.get(0).toBytes(), 1);
+		sendingPacket = this.createPacket(request.toBytes(), 1);
 
 		// Print out info that is in the packet before sending
 		this.printPacket(sendingPacket);
 
 		// Send the datagram packet to the Scheduler on port 1
 		this.sendPacket(sendReceiveSocket, sendingPacket, "Floor");
+		}
 
-
+/*
 		byte elevatorData[] = new byte[100];
 		receivingPacket = new DatagramPacket(elevatorData, elevatorData.length);
 		this.receivePacket(sendReceiveSocket, receivingPacket, "Floor");
@@ -100,6 +101,7 @@ public class Floor extends Subsystem implements Runnable {
 
 		// We're finished, so close the socket.
 		sendReceiveSocket.close();
+		*/
 	}
 
 	public List<FloorData> getData() {
