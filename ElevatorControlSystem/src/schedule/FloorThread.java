@@ -2,13 +2,11 @@ package schedule;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
-
 import schedule.common.Floor;
 import schedule.common.Subsystem;
 
 public class FloorThread extends Subsystem implements Runnable {
-	private DatagramPacket floorPacket, responsePacket;
+	private DatagramPacket floorPacket;
 	private DatagramSocket floorSocket;
 	private Scheduler scheduler;
 

@@ -7,7 +7,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
 import floor.common.Subsystem;
 
@@ -20,16 +19,12 @@ import floor.common.Subsystem;
  */
 public class Floor extends Subsystem implements Runnable {
 
-
-	private int[] floors = new int[SIZE];
-	private static final int SIZE = 10;
-
 	private FloorButton upFloorButton, downFloorButton;
 	private FloorLamp upLamp, downLamp;
 	private DirectionLamp upDirectionLamp, downDirectionLamp;
 	private List<FloorData> data = new ArrayList<FloorData>();
 
-	private DatagramPacket sendingPacket, receivingPacket;
+	private DatagramPacket sendingPacket;
 	private DatagramSocket sendReceiveSocket;
 
 	public Floor() {
@@ -41,8 +36,6 @@ public class Floor extends Subsystem implements Runnable {
 
 		upDirectionLamp = new DirectionLamp(Constants.UP);
 		downDirectionLamp = new DirectionLamp(Constants.DOWN);
-
-		floors = IntStream.range(1,10).toArray();
 
 		try {
 			// Construct a datagram socket to send and receive
